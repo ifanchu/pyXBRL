@@ -718,6 +718,12 @@ CommonFact.CommonStockSharesIssued = CommonFact(
         'us-gaap:CommonStockSharesIssued',
     ),
 )
+CommonFact.DepreciationDepletionAndAmortization = CommonFact(
+    'DepreciationDepletionAndAmortization',
+    (
+        'us-gaap:DepreciationDepletionAndAmortization',
+    ),
+)
 
 if __name__ == '__main__':
     print CommonFact.all()

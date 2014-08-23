@@ -135,12 +135,12 @@ CommonMeasurement.NetProfitRatio = CommonMeasurement(
 )
 # P/E Ratio is calculated as Stock Market Price / EPS
 # market price is not included in financial report, EPS is
-# TODO: how to get stock price on the filing date
+# requires quote data, need to compute this during import
 CommonMeasurement.PriceEarningsRatio = CommonMeasurement(
     'PriceEarningsRatio',
     'P/E Ratio',
     "A valuation ratio of a company's current share price compared to its per-share earnings.",
-    (0,),
+    ('Quote', CommonFact.EarningsPerShareBasic, '/'),
 )
 
 CommonMeasurement.ROA = CommonMeasurement(
@@ -155,9 +155,28 @@ CommonMeasurement.ROE = CommonMeasurement(
     'Return on Equity',
     (CommonFact.NetIncomeLoss, CommonFact.Equity, '/'),
 )
-CommonMeasurement.ROS = CommonMeasurement(
-    'ROS',
-    'ROS',
+CommonMeasurement.ROR = CommonMeasurement(
+    'ROR',
+    'ROR',
     'Return on Revenues',
     (CommonFact.NetIncomeLoss, CommonFact.Revenues, '/'),
+)
+CommonMeasurement.FreeCashFlow = CommonMeasurement(
+    'FreeCashFlow',
+    'FCF',
+    'Free Cash Flow',
+    (CommonFact.NetCashFlowsOperating, CommonFact.NetCashFlowsInvestingContinuing, '-'),
+)
+# PriceToFreeCashFlowRatio requires quote data, need to compute this during import
+CommonMeasurement.PriceToFreeCashFlowRatio = CommonMeasurement(
+    'PriceToFreeCashFlowRatio',
+    'Price to FCF',
+    'Price to Free Cash Flow',
+    ('Quote', CommonMeasurement.FreeCashFlow, '/'),
+)
+CommonMeasurement.MarketCapitalization = CommonMeasurement(
+    'MarketCapitalization',
+    'Market Cap',
+    'Market Capitalization',
+    ('Quote', CommonFact.CommonStockSharesIssued, '*'),
 )
