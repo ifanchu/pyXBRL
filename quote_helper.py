@@ -9,6 +9,9 @@ import json
 hostname = "127.0.0.1:8000"
 
 def get_quote(symbol, fiscal_period_end_date):
+    """
+    Given a symbol and a date, return a float as its stock price.
+    """
     # raise NotImplementedError
     api_url = 'http://{hostname}/get_quote?symbol={symbol}&year={year}&month={month}'.format(
         hostname=hostname,

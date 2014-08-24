@@ -18,7 +18,7 @@ class CommonFact(object):
         Args:
             name CommonFact name
             possible_fact_names A tuple of strings which are valid us-gaap tags
-            impute_equations A tuple of tuples which lists all possible calculations for this CommonFact calculated from other CommonFact. Use Reverse Polish Notation.
+            impute_equations A tuple of tuples which lists all possible calculations for this CommonFact calculated from other CommonFact. Use Reverse Polish Notation. This calculation will only be calculated if the value is not present in the xbrl xml file.
         """
         if name and isinstance(name, str):
             self.name = name

@@ -295,5 +295,5 @@ if __name__ == '__main__':
     # print x.common_facts[CommonFact.NetCashFlowsOperatingContinuing]
     # print x.common_facts[CommonFact.NetCashFlowsInvestingContinuing]
     # print x.common_measurements[CommonMeasurement.PriceToFreeCashFlowRatio]
-    for key, v in x.common_facts.items():
+    for key, v in x.common_measurements.items():
         print '{0}: {1}'.format(key.name, v)

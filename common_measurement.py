@@ -81,6 +81,8 @@ class CommonMeasurement(object):
         """
         return tuple(cls.pool.values())
 
+Quote = 'Quote'
+
 ############################################################
 ###             Balance Sheet
 ############################################################
@@ -148,7 +150,7 @@ CommonMeasurement.PriceEarningsRatio = CommonMeasurement(
     'PriceEarningsRatio',
     'P/E Ratio',
     "A valuation ratio of a company's current share price compared to its per-share earnings.",
-    ('Quote', CommonFact.EarningsPerShareBasic, '/'),
+    (Quote, CommonFact.EarningsPerShareBasic, '/'),
 )
 
 CommonMeasurement.ROA = CommonMeasurement(
@@ -180,7 +182,7 @@ CommonMeasurement.MarketCapitalization = CommonMeasurement(
     'MarketCapitalization',
     'Market Cap',
     'Market Capitalization equals to common shares outstaning times stock price',
-    ('Quote', CommonFact.CommonStockSharesIssued, '*'),
+    (Quote, CommonFact.CommonStockSharesIssued, '*'),
 )
 CommonMeasurement.PriceToFreeCashFlowRatio = CommonMeasurement(
     'PriceToFreeCashFlowRatio',
