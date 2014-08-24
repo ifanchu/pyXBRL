@@ -52,7 +52,10 @@ def calculate(tokens, decimal=-1):
             second_operand = stack.pop()
             first_operand = stack.pop()
             operator = operators[current]
-            result = operator(first_operand, second_operand)
+            try:
+                result = operator(first_operand, second_operand)
+            except ZeroDivisionError:
+                result = 0
             stack.append(result)
     if len(stack) == 1:
         ret = stack.pop()
