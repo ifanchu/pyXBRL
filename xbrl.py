@@ -1,9 +1,7 @@
 from lxml import etree
-from lxml import html
 from common_fact import CommonFact
 from common_measurement import CommonMeasurement
 from datetime import date
-import urllib2
 from quote_helper import get_quote
 
 class Context(object):
@@ -288,42 +286,6 @@ class XBRL(object):
             return ''
         return self.common_facts[common_fact]
 
-    @classmethod
-    def get_definition(cls, us_gaap_tag):
-        """
-        Given a us-gaap tag, return its definition. This method needs internet connection
-        """
-        if not us_gaap_tag:
-            return ''
-        url = 'http://www.xbrlsite.com/LinkedData/InfoElementsHTML.aspx?Name={0}'.format(us_gaap_tag)
-        FAKE_AGENT = 'Mozilla/5.0 (X11; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0'
-        headers = {'User-Agent': FAKE_AGENT}
-        request = urllib2.Request(url, None, headers)
-        response = urllib2.urlopen(request)
-        content = response.read()
-        response.close()
-        doc = html.fromstring(content)
-        trs = doc.xpath('//tr')
-        ret = {}
-        for tr in trs:
-            header = tr.getchildren()[0].text.strip()
-            row = tr.getchildren()[1].text.strip() if tr.getchildren()[1].text else ''
-            if 'Documentation:' in header:
-                ret['documentation'] = row
-                continue
-            if 'Standard label:' in header:
-                ret['label'] = row
-                continue
-            if 'Data type:' in header:
-                ret['data_type'] = row
-                continue
-            if 'Period type:' in header:
-                ret['period_type'] = row
-                continue
-            if 'Balance type:' in header:
-                ret['balance_type'] = row
-                continue
-        return ret
 
 if __name__ == '__main__':
     x = XBRL('/Volumes/HDD/statementbased/rawdata/xbrl/320193/2013-10-30/aapl-20130928.xml')

@@ -71,6 +71,7 @@ class UsGaapConceptPool(object):
     """
     This class represents the entire collection of UsGaapConcept, provide convenience method to retrieve all concepts and access to specific concept.
     """
+
     CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
     PICKLE_FILE_NAME = 'usgaap-concepts.pickle'
     pool = {}
@@ -135,7 +136,17 @@ class UsGaapConceptPool(object):
             cls._load_pickle()
         return sorted([x.tag for x in cls.pool.values()])
 
+    @classmethod
+    def get_documentation(cls, tag):
+        """
+        Given a tag in <prefix>:<name> format, return its documentation
+        """
+        if not tag:
+            return ''
+        c = cls.get(tag)
+        return c.documentation if c else ''
+
 if __name__ == '__main__':
-    UsGaapConceptPool._load_pickle()
-    obj = UsGaapConceptPool.get('dei:documenttype')
-    print obj.tag
+    # UsGaapConceptPool._load_pickle()
+    # obj = UsGaapConceptPool.get('dei:documenttype')
+    print UsGaapConceptPool.get_documentation('us-gaap:assets')
