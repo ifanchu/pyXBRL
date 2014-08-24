@@ -120,6 +120,8 @@ class UsGaapConceptPool(object):
 
     @classmethod
     def get_pool(cls):
+        if not cls._pool:
+            cls._parse_concepts_to_pool()
         return cls._pool
 
     @classmethod
