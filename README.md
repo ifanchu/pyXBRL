@@ -1,8 +1,8 @@
-# py-sec-xbrl
+# pyXBRL
 
-This simple API is to read in an XBRL xml file, parse it and then calculate common financial facts and financial measurements for analytical use.
+This moduls is to read in an XBRL xml file, parse it and then calculate predefined common financial facts and financial measurements for analytical use.
 
-This API was inspired from [lukeroisak's pysec module](https://github.com/lukerosiak/pysec)
+This module was inspired by [lukeroisak's pysec module](https://github.com/lukerosiak/pysec)
 
 ## Library Dependencies
 
@@ -113,7 +113,13 @@ The second argument is the abbreviation for this measurement, if any.
 The third argument is the definition for this measurement, if any.
 
 The fourth argument is the core of measurement computation: the equation. Each measurement takes a tuple in [Reverse Polish Notation](http://en.wikipedia.org/wiki/Reverse_Polish_notation) as its calculation equation.
+
 The equation tuple takes 4 kinds of objects: CommonFact, CommonMeasurement, a char in '+-*/', and Quote.
-The most confusing part here is Quote. Because some of the measurements require stock price to calculate the value, for example, P/E Ration is defined as stock price divided by EPS. However, there is no stock price data in the XBRL xml file. So we have to get this data from external.
-That's where `quote_helper.py` comes into play, `quote_helper.py` defines a single method `get_quote(symbol, fiscal_period_end_date):` which should return a float as a representative value of stock price for the given symbol on the given date.
+
+The most confusing part here is Quote. Because some of the measurements require stock price to calculate the value, for example, P/E Ratio is defined as stock price divided by EPS. However, there is no stock price data in the XBRL xml file. So we have to get this data from external.
+
+That's where `quote_helper.py` comes into play, `quote_helper.py` defines a single method
+```get_quote(symbol, fiscal_period_end_date):```
+which should return a float as a representative value of stock price for the given symbol on the given date.
+
 Once this method is functional, `CommonMeasurement.calculate` method will get the value from this method and compute based on the equation.
