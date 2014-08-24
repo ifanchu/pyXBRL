@@ -73,7 +73,7 @@ class UsGaapConceptPool(object):
     """
 
     CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-    PICKLE_FILE_NAME = 'usgaap-concepts.pickle'
+    PICKLE_FILE_PATH = os.path.join(CURRENT_DIR, 'usgaap-concepts.pickle')
     pool = {}
 
     def __init__(self):
@@ -105,18 +105,18 @@ class UsGaapConceptPool(object):
     def _create_pickle(cls):
         if not cls.pool:
             cls._parse_concepts_to_pool()
-        with open(cls.PICKLE_FILE_NAME, 'wb') as f:
+        with open(cls.PICKLE_FILE_PATH, 'wb') as f:
             pickle.dump(cls.pool, f)
 
     @classmethod
     def _has_pickle(cls):
-        return os.path.exists(cls.PICKLE_FILE_NAME)
+        return os.path.exists(cls.PICKLE_FILE_PATH)
 
     @classmethod
     def _load_pickle(cls):
         if not cls._has_pickle():
             cls._create_pickle()
-        with open(cls.PICKLE_FILE_NAME, 'rb') as f:
+        with open(cls.PICKLE_FILE_PATH, 'rb') as f:
             cls.pool = pickle.load(f)
 
     @classmethod
