@@ -67,9 +67,7 @@ To list all predefined CommonMeasurement objects
 
 This module provides 2 classes: `UsGaapConcept` and `UsGaapConceptPool`. These 2 clases are to provide access to the standard US GAAP financial reporting Taxonomy established by [FASB](http://www.fasb.org/home). You can get all valid us-gaap tag from these classes.
 
-There is already a usgaap-concepts.pickle file which was serialized ahead of time, you can delete this file and call any public method in the module to create the pickle file.
-
-Note that there are nearly 18000 entries of UsGaapConcept, so reading the pickle could take about 5 seconds.
+Note that there are nearly 18000 entries of UsGaapConcept, so reading the pickle could take about 2 seconds.
 
 ## How to add additional CommonFact
 
