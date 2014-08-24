@@ -251,6 +251,12 @@ CommonFact.Equity = CommonFact(
         ('EquityAttributableToParent', 'EquityAttributableToNoncontrollingInterest', '+',),
     ),
 )
+CommonFact.AccountsReceivable = CommonFact(
+    'AccountsReceivable',
+    (
+        'us-gaap:AccountsReceivableNetCurrent',
+    ),
+)
 
 ############################################################
 ###             Income Statements
@@ -610,6 +616,7 @@ CommonFact.NetCashFlowsInvestingContinuing = CommonFact(
     'NetCashFlowsInvestingContinuing',
     (
         'us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations',
+        'us-gaap:NetCashProvidedByUsedInInvestingActivities',
     )
 )
 
@@ -618,6 +625,7 @@ CommonFact.NetCashFlowsFinancingContinuing = CommonFact(
     'NetCashFlowsFinancingContinuing',
     (
         'us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations',
+        'us-gaap:NetCashProvidedByUsedInFinancingActivities',
     )
 )
 
@@ -722,6 +730,7 @@ CommonFact.DepreciationDepletionAndAmortization = CommonFact(
     'DepreciationDepletionAndAmortization',
     (
         'us-gaap:DepreciationDepletionAndAmortization',
+        'us-gaap:DepreciationAmortizationAndAccretionNet',
     ),
 )
 

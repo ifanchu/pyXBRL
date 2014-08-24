@@ -35,7 +35,7 @@ def calculate(tokens, decimal=-1):
         current = tokens[index]
         # validate each token
         try:
-            current = float(current)
+            current = abs(float(current))
         except ValueError:
             # current token is not a number
             if current not in operators:

@@ -38,7 +38,7 @@ class CommonMeasurement(object):
     def __repr__(self):
         return '<{0}: {1}>'.format(self.__class__.__name__, self.name)
 
-    def calculate(self, common_facts, common_measurements):
+    def calculate(self, common_facts, common_measurements, quote=1):
         """
         Given common_facts as a map which maps from CommonFact to its value and common_measurements which maps from CommonMeasurement to its value, calculate the measurement value based on the equation using Reverse Polish Notation.
         The reason to have 2 maps here is:
@@ -52,18 +52,26 @@ class CommonMeasurement(object):
         if not self.equation:
             return ret
         copy = list(self.equation)
-        copy = [common_facts[f] if f in common_facts else f for f in copy]
-        for index in xrange(len(copy)):
-            value = copy[index]
-            if isinstance(value, float) or isinstance(value, int):
-                continue
-            if isinstance(value, str) and value in '+-*/':
-                continue
-            if value in common_measurements:
-                copy[index] = common_measurements[value]
-            else:
-                copy[index] = 0
-        ret = rpn_helper.calculate(copy)
+        copy = [common_facts[f] if (isinstance(f, CommonFact) and f in common_facts) else f for f in copy]
+        copy = [common_measurements[f] if (isinstance(f, CommonMeasurement) and f in common_measurements) else f for f in copy]
+        copy = [quote if (isinstance(f, str) and f == 'Quote') else f for f in copy]
+        copy = [0 if (isinstance(f, str) and f not in '+-*/') else f for f in copy]
+        # if there is still CommonFact or CommonMeasurement object in copy array, then it means that is a CommonMeasurement and it has not yet been calculated, so put it as 0
+        copy = [0 if (isinstance(f, CommonFact) or isinstance(f, CommonMeasurement)) else f for f in copy]
+        # for index in xrange(len(copy)):
+        #     value = copy[index]
+        #     if isinstance(value, float) or isinstance(value, int):
+        #         continue
+        #     if isinstance(value, str) and value in '+-*/':
+        #         continue
+        #     if value in common_measurements:
+        #         copy[index] = common_measurements[value]
+        #     else:
+        #         copy[index] = 0
+        try:
+            ret = rpn_helper.calculate(copy)
+        except ZeroDivisionError:
+            return 0
         return ret
 
     @classmethod
@@ -165,18 +173,18 @@ CommonMeasurement.FreeCashFlow = CommonMeasurement(
     'FreeCashFlow',
     'FCF',
     'Free Cash Flow',
-    (CommonFact.NetCashFlowsOperating, CommonFact.NetCashFlowsInvestingContinuing, '-'),
+    (CommonFact.NetCashFlowsOperatingContinuing, CommonFact.NetCashFlowsInvestingContinuing, '-'),
 )
 # PriceToFreeCashFlowRatio requires quote data, need to compute this during import
+CommonMeasurement.MarketCapitalization = CommonMeasurement(
+    'MarketCapitalization',
+    'Market Cap',
+    'Market Capitalization equals to common shares outstaning times stock price',
+    ('Quote', CommonFact.CommonStockSharesIssued, '*'),
+)
 CommonMeasurement.PriceToFreeCashFlowRatio = CommonMeasurement(
     'PriceToFreeCashFlowRatio',
     'Price to FCF',
     'Price to Free Cash Flow',
-    ('Quote', CommonMeasurement.FreeCashFlow, '/'),
-)
-CommonMeasurement.MarketCapitalization = CommonMeasurement(
-    'MarketCapitalization',
-    'Market Cap',
-    'Market Capitalization',
-    ('Quote', CommonFact.CommonStockSharesIssued, '*'),
+    (CommonMeasurement.MarketCapitalization, CommonMeasurement.FreeCashFlow, '/'),
 )

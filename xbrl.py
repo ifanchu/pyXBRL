@@ -4,6 +4,7 @@ from common_fact import CommonFact
 from common_measurement import CommonMeasurement
 from datetime import date
 import urllib2
+from quote_helper import get_quote
 
 class Context(object):
     """ A simulated Enum class to represent 2 different contexts: Instant and Duration
@@ -155,12 +156,15 @@ class XBRL(object):
         """
         Calculate CommonMeasurement and put the result in self.common_measurements
         """
+        quote_month_avg = get_quote(self.dei[DEI.TradingSymbol], self.fiscal_period_end_date)
         for m in CommonMeasurement.all():
-            try:
-                value = m.calculate(self.common_facts, self.common_measurements)
-            except:
-                print 'Failed to get measurement for {0}'.format(m)
+            # measurement calculation could use both facts and measurements, so supply both
+            value = m.calculate(self.common_facts, self.common_measurements, quote_month_avg)
             self.common_measurements[m] = value
+        for m, value in self.common_measurements.items():
+            if value == 0:
+                value = m.calculate(self.common_facts, self.common_measurements, quote_month_avg)
+                self.common_measurements[m] = value
 
     def _find_contexts(self):
         """
@@ -215,7 +219,13 @@ class XBRL(object):
                     year, month = self.fiscal_period_end_date.year, self.fiscal_period_end_date.month
                     start_month = 12 if (month - 2) % 12 == 0 else (month - 2) % 12
                     start_year = year - 1 if month <= 2 else year
-                    if '{0}-{1:02d}'.format(start_year, start_month) not in start_date_node.text:
+                    filter_text1 = '{0}-{1:02d}'.format(start_year, start_month)
+                    # some company put start date to the last day of previous month, so we need to check both
+                    start_month = 12 if (month - 3) % 12 == 0 else (month - 3) % 12
+                    start_year = year - 1 if month <= 3 else year
+                    filter_text2 = '{0}-{1:02d}'.format(start_year, start_month)
+                    print filter_text1, filter_text2
+                    if filter_text1 not in start_date_node.text and filter_text2 not in start_date_node.text:
                         continue
                 context_duration = node.get('id')
         self.context_instant = context_instant
@@ -314,3 +324,14 @@ class XBRL(object):
                 ret['balance_type'] = row
                 continue
         return ret
+
+if __name__ == '__main__':
+    x = XBRL('/Volumes/HDD/statementbased/rawdata/xbrl/320193/2013-10-30/aapl-20130928.xml')
+    # x = XBRL('/Volumes/HDD/statementbased/rawdata/xbrl/320017/2014-05-08/nbs-20140331.xml')
+    # print x.context_instant
+    # print x.context_duration
+    # print x.common_facts[CommonFact.NetCashFlowsOperatingContinuing]
+    # print x.common_facts[CommonFact.NetCashFlowsInvestingContinuing]
+    # print x.common_measurements[CommonMeasurement.PriceToFreeCashFlowRatio]
+    for key, v in x.common_facts.items():
+        print '{0}: {1}'.format(key.name, v)
