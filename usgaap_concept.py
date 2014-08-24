@@ -74,7 +74,7 @@ class UsGaapConceptPool(object):
 
     CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
     PICKLE_FILE_PATH = os.path.join(CURRENT_DIR, 'usgaap-concepts.pickle')
-    pool = {}
+    _pool = {}
 
     def __init__(self):
         raise NotImplementedError
@@ -99,42 +99,46 @@ class UsGaapConceptPool(object):
                 c = UsGaapConcept.create_instance(tokens)
                 if not c:
                     continue
-                cls.pool[c.tag.upper()] = c
+                cls._pool[c.tag.upper()] = c
 
-    @classmethod
-    def _create_pickle(cls):
-        if not cls.pool:
-            cls._parse_concepts_to_pool()
-        with open(cls.PICKLE_FILE_PATH, 'wb') as f:
-            pickle.dump(cls.pool, f)
+    # @classmethod
+    # def _create_pickle(cls):
+    #     if not cls._pool:
+    #         cls._parse_concepts_to_pool()
+    #     with open(cls.PICKLE_FILE_PATH, 'wb') as f:
+    #         pickle.dump(cls.pool, f)
 
-    @classmethod
-    def _has_pickle(cls):
-        return os.path.exists(cls.PICKLE_FILE_PATH)
+    # @classmethod
+    # def _has_pickle(cls):
+    #     return os.path.exists(cls.PICKLE_FILE_PATH)
 
-    @classmethod
-    def _load_pickle(cls):
-        if not cls._has_pickle():
-            cls._create_pickle()
-        with open(cls.PICKLE_FILE_PATH, 'rb') as f:
-            cls.pool = pickle.load(f)
+    # @classmethod
+    # def _load_pickle(cls):
+    #     if not cls._has_pickle():
+    #         cls._create_pickle()
+    #     with open(cls.PICKLE_FILE_PATH, 'rb') as f:
+    #         cls.pool = pickle.load(f)
 
     @classmethod
     def get(cls, tag):
         """
         tag format is <prefix>:<name>, eg. dei:DocumentType
         """
-        if not cls.pool:
-            cls._load_pickle()
-        if tag.upper() not in cls.pool:
+        if not cls._pool:
+            cls._parse_concepts_to_pool()
+        if tag.upper() not in cls._pool:
             return None
-        return cls.pool[tag.upper()]
+        return cls._pool[tag.upper()]
 
     @classmethod
     def get_all_tags(cls):
-        if not cls.pool:
-            cls._load_pickle()
-        return sorted([x.tag for x in cls.pool.values()])
+        if not cls._pool:
+            cls._parse_concepts_to_pool()
+        return sorted([x.tag for x in cls._pool.values()])
+
+    @classmethod
+    def get_pool(cls):
+        return cls._pool
 
     @classmethod
     def get_documentation(cls, tag):
