@@ -2,4 +2,3 @@
 *.pyc
 data/
 test_xbrl.py
-us-gaap/
