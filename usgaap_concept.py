@@ -101,24 +101,6 @@ class UsGaapConceptPool(object):
                     continue
                 cls._pool[c.tag.upper()] = c
 
-    # @classmethod
-    # def _create_pickle(cls):
-    #     if not cls._pool:
-    #         cls._parse_concepts_to_pool()
-    #     with open(cls.PICKLE_FILE_PATH, 'wb') as f:
-    #         pickle.dump(cls.pool, f)
-
-    # @classmethod
-    # def _has_pickle(cls):
-    #     return os.path.exists(cls.PICKLE_FILE_PATH)
-
-    # @classmethod
-    # def _load_pickle(cls):
-    #     if not cls._has_pickle():
-    #         cls._create_pickle()
-    #     with open(cls.PICKLE_FILE_PATH, 'rb') as f:
-    #         cls.pool = pickle.load(f)
-
     @classmethod
     def get(cls, tag):
         """
