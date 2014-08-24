@@ -7,6 +7,7 @@ Remove all rows except for dei and us-gaap
 """
 import os
 import pickle
+import json
 
 class UsGaapConcept(object):
     """
@@ -24,6 +25,8 @@ class UsGaapConcept(object):
                  _label,
                  _documentation,
                  _deprecatedLabel):
+        if not _prefix or not _name:
+            raise ValueError('_prefix and _name can not be None or empty')
         self.prefix = _prefix
         self.name = _name
         self.type = _type
@@ -46,19 +49,11 @@ class UsGaapConcept(object):
         tokens = tuple([x.replace('"', '') for x in tokens])
         if len(tokens) != 11:
             return None
-        return UsGaapConcept(
-            tokens[0],
-            tokens[1],
-            tokens[2],
-            tokens[3],
-            tokens[4],
-            tokens[5],
-            tokens[6],
-            tokens[7],
-            tokens[8],
-            tokens[9],
-            tokens[10],
-        )
+        try:
+            o = UsGaapConcept(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7], tokens[8], tokens[9], tokens[10])
+        except ValueError:
+            return None
+        return o
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and self.tag == other.tag
@@ -68,6 +63,9 @@ class UsGaapConcept(object):
 
     def __hash__(self):
         return hash(self.tag)
+
+    def json(self):
+        return json.dumps(self)
 
 class UsGaapConceptPool(object):
     """
@@ -87,6 +85,8 @@ class UsGaapConceptPool(object):
             raise IOError('Concept file does not exist in {0}'.format(concept_file_path))
         with open(concept_file_path) as f:
             for line in f:
+                if not line:
+                    continue
                 if line.startswith('#'):
                     continue
                 line = line.strip()
@@ -96,6 +96,8 @@ class UsGaapConceptPool(object):
                     diff = 11 - len(tokens)
                     tokens.extend([''] * diff)
                 c = UsGaapConcept.create_instance(tokens)
+                if not c:
+                    continue
                 cls.pool[c.tag.upper()] = c
 
     @classmethod
@@ -135,4 +137,5 @@ class UsGaapConceptPool(object):
 
 if __name__ == '__main__':
     UsGaapConceptPool._load_pickle()
-    obj = UsGaapConceptPool.get('dei:documentype')
+    obj = UsGaapConceptPool.get('dei:documenttype')
+    print obj.tag
