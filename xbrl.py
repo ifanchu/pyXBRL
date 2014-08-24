@@ -131,7 +131,7 @@ class XBRL(object):
                 try:
                     value = fact.impute(self.common_facts)
                 except:
-                    print 'Imputation failed: {0}'.format(fact)
+                    print 'Imputation failed: {0}, equaltion: {1}'.format(fact, fact.impute_equations)
                 self.common_facts[fact] = value
 
     def get_empty_common_facts(self):
@@ -222,7 +222,7 @@ class XBRL(object):
                     start_month = 12 if (month - 3) % 12 == 0 else (month - 3) % 12
                     start_year = year - 1 if month <= 3 else year
                     filter_text2 = '{0}-{1:02d}'.format(start_year, start_month)
-                    print filter_text1, filter_text2
+                    # print filter_text1, filter_text2
                     if filter_text1 not in start_date_node.text and filter_text2 not in start_date_node.text:
                         continue
                 context_duration = node.get('id')
