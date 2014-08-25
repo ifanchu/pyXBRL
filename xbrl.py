@@ -130,8 +130,8 @@ class XBRL(object):
             if value == float(0):
                 try:
                     value = fact.impute(self.common_facts)
-                except:
-                    print 'Imputation failed: {0}, equaltion: {1}'.format(fact, fact.impute_equations)
+                except Exception as err:
+                    print 'Imputation failed: {0}, equaltion: {1} on xbrl {2} because {3}'.format(fact, fact.impute_equations, self.url, err)
                 self.common_facts[fact] = value
 
     def get_empty_common_facts(self):
@@ -285,15 +285,3 @@ class XBRL(object):
         if common_fact not in self.common_facts:
             return ''
         return self.common_facts[common_fact]
-
-
-if __name__ == '__main__':
-    x = XBRL('/Volumes/HDD/statementbased/rawdata/xbrl/320193/2013-10-30/aapl-20130928.xml')
-    # x = XBRL('/Volumes/HDD/statementbased/rawdata/xbrl/320017/2014-05-08/nbs-20140331.xml')
-    # print x.context_instant
-    # print x.context_duration
-    # print x.common_facts[CommonFact.NetCashFlowsOperatingContinuing]
-    # print x.common_facts[CommonFact.NetCashFlowsInvestingContinuing]
-    # print x.common_measurements[CommonMeasurement.PriceToFreeCashFlowRatio]
-    for key, v in x.common_measurements.items():
-        print '{0}: {1}'.format(key.name, v)

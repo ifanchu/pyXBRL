@@ -153,10 +153,11 @@ CommonFact.NoncurrentLiabilities = CommonFact(
     'NoncurrentLiabilities',
     (
         'us-gaap:LiabilitiesNoncurrent',
+        'us-gaap:EquityMethodInvestmentSummarizedFinancialInformationNoncurrentLiabilities',
     ),
     (
         ('Liabilities', 'CurrentLiabilities', '-'),
-        ('CurrentLiabilities'),
+        ('CurrentLiabilities',),
     ),
 )
 
@@ -230,7 +231,7 @@ CommonFact.EquityAttributableToParent = CommonFact(
     ),
     (
         ('Equity', 'EquityAttributableToNoncontrollingInterest', '-'),
-        ('Equity'),
+        ('Equity',),
     ),
 )
 
